@@ -92,19 +92,19 @@ public class VerticlePoolSystem : PoolSystem
         prevAnchoredPos = poolScrollView.content.anchoredPosition;
 
         if (direction.y > 0 && poolCells[maxBottomCellIndex].MaxY() > poolViewBounds.min.y) {
-            PoolTopToBottomDir();
+                PoolTopToBottomDir();
         } else if (direction.y < 0 && poolCells[maxTopCellIndex].MinY() < poolViewBounds.max.y) {
             PoolBottomToTopDir();
         }
     }
-
+    
     private void PoolTopToBottomDir() {
-        bool x = poolCells[maxTopCellIndex].MinY() < poolViewBounds.max.y;
-
         isUpdating = true;
         int numRowAdd = 0;
         int numRow = 0;
+        int dem = 0;
         while (poolCells[maxTopCellIndex].MinY() > poolViewBounds.max.y && currentDataIndex < totalItemData) {
+            dem++;
             endIndex++;
             startIndex++;
             if (endIndex >= numColunm) {
@@ -121,7 +121,6 @@ public class VerticlePoolSystem : PoolSystem
             itemCells[maxTopCellIndex].indexData = currentDataIndex;
             itemCells[maxTopCellIndex].Init(itemDatas[currentDataIndex]);
             itemCells[maxTopCellIndex].SetRow(endIndex);
-
             maxTopCellIndex++;
             currentDataIndex++;
             if (maxTopCellIndex >= poolCells.Count) {
@@ -131,8 +130,9 @@ public class VerticlePoolSystem : PoolSystem
         if (numRow > 0) numRowAdd -= numRow;
         poolScrollView.content.sizeDelta += Vector2.up * numRow * (distanceCell.y + cellSize.y);
         if (numRowAdd > 0) {
+            poolScrollView.content.anchoredPosition -= Vector2.up * (numRowAdd * cellSize.y + numRowAdd * distanceCell.y);
             UpdatePossitionCellPool(numRowAdd * cellSize.y + numRowAdd * distanceCell.y);
-            poolScrollView.content.anchoredPosition -= Vector2.up* (numRowAdd * cellSize.y + numRowAdd * distanceCell.y);
+            poolScrollView.SetContentStart(Vector2.down * (numRowAdd * cellSize.y + numRowAdd * distanceCell.y));
         }
         isUpdating = false;
     }
@@ -141,7 +141,6 @@ public class VerticlePoolSystem : PoolSystem
         isUpdating = true;
         int numRowAdd = 0;
         int numRow = 0;
-        bool x = poolCells[maxBottomCellIndex].MaxY() < poolViewBounds.min.y;
         while (poolCells[maxBottomCellIndex].MaxY() < poolViewBounds.min.y && currentDataIndex - poolCells.Count > 0) {
             endIndex--;
             startIndex--;
@@ -172,6 +171,7 @@ public class VerticlePoolSystem : PoolSystem
             UpdatePossitionCellPool(-numRowAdd * cellSize.y - numRowAdd * distanceCell.y);
             poolScrollView.content.anchoredPosition += Vector2.up * (numRowAdd * cellSize.y + numRowAdd * distanceCell.y);
 
+            poolScrollView.SetContentStart(Vector2.up * (numRowAdd * cellSize.y + numRowAdd * distanceCell.y));
         }
         isUpdating = false;
     }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PoolSystem : MonoBehaviour
 {
-    [SerializeField] protected ScrollRect poolScrollView;
+    [SerializeField] protected PoolScrollView poolScrollView;
     [SerializeField] protected RectTransform prefabsCell;
 
     protected List<RectTransform> poolCells;
